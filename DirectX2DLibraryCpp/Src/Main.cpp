@@ -4,11 +4,24 @@
 #include <Windows.h>
 #include "Engine/Engine.h"
 #include "Common/Vec.h"
+#include <time.h>
+
+enum GameMainProcessing
+{
+	CountDown,
+	Playing,
+	Result,
+};
+
+GameMainProcessing MainProcessing = CountDown;
 
 
 Vec2 g_Position = Vec2(0.0f, 0.0f);
 Vec2 g_Scale = Vec2(1.0f, 1.0f);
 float g_Angle = 0.0f;
+
+float timer = 0.0f;
+char buf[24];
 
 // ゲーム処理
 void GameProcessing();
@@ -70,38 +83,27 @@ void GameProcessing()
 	// 入力データの更新
 	Engine::Update();
 
-
-	//========================================================
-	// キーボードの入力取得
-	//========================================================
-
-	//if (Engine::IsKeyboardKeyPushed(DIK_SPACE) == true)
-	//{
-	//	// キーが押された瞬間の処理
-	//}
-
-	//if (Engine::IsKeyboardKeyHeld(DIK_LEFT) == true)
-	//{
-	//	// キーが押されている間の処理
-	//}
-
-	//if (Engine::IsKeyboardKeyReleased(DIK_A))
-	//{
-	//	// キーが離された瞬間の処理
-	//}
-
-
+	// １秒の計測
+	timer = clock() / CLOCKS_PER_SEC;
+	snprintf(buf, 24, "%3f", timer);
+	puts(buf);
 
 	//最初にカウントダウンを表示
-
-
 	//カウントダウンが終わったらキーの入力の受付を開始
-	
-	
 	//現在何発連打されているかを表示
-	
-	
 	//一定時間経過したら終了 = > 終了した旨と結果を表示
+
+	switch (MainProcessing)
+	{
+	case CountDown:
+		break;
+	case Playing:
+		break;
+	case Result:
+		break;
+	default:
+		break;
+	}
 
 }
 
@@ -112,9 +114,7 @@ void DrawProcessing()
 	Engine::StartDrawing(0);
 
 	// フォント描画
-	Engine::DrawFont(0.0f, 0.0f, "FontSize:Small", FontSize::Small, FontColor::White);
-	Engine::DrawFont(0.0f, 30.0f, "FontSize:Regular", FontSize::Regular, FontColor::White);
-	Engine::DrawFont(0.0f, 60.0f, "FontSize:Large", FontSize::Large, FontColor::White);
+	Engine::DrawFont(0.0f, 0.0f, buf, FontSize::Small, FontColor::White);
 
 	// 描画終了
 	// 描画処理を終了する場合、必ず最後に実行する
