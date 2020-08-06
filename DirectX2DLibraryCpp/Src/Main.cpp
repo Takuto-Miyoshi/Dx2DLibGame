@@ -23,6 +23,12 @@ float g_Angle = 0.0f;
 float timer = 0.0f;
 char buf[24];
 
+int countDownSwitch = 0;
+
+int counter = 0;
+char printCounter[24];
+
+
 // ゲーム処理
 void GameProcessing();
 // 描画処理
@@ -87,6 +93,10 @@ void GameProcessing()
 	timer = clock() / CLOCKS_PER_SEC;
 	snprintf(buf, 24, "%3f", timer);
 	puts(buf);
+	countDownSwitch = timer;
+	
+	snprintf(printCounter, 24, "%d", counter);
+	puts(printCounter);
 
 	//最初にカウントダウンを表示
 	//カウントダウンが終わったらキーの入力の受付を開始
@@ -98,6 +108,9 @@ void GameProcessing()
 	case CountDown:
 		break;
 	case Playing:
+		if (Engine::IsKeyboardKeyPushed(DIK_SPACE)) {
+			counter++;
+		}
 		break;
 	case Result:
 		break;
@@ -113,8 +126,40 @@ void DrawProcessing()
 	// 描画処理を実行する場合、必ず最初実行する
 	Engine::StartDrawing(0);
 
-	// フォント描画
+	// 適当な背景
+	Engine::LoadTexture("BackGround", "Res/GB.png");
+	Engine::DrawTexture(0, 0, "BackGround");
+
+	// 確認用のタイマー
 	Engine::DrawFont(0.0f, 0.0f, buf, FontSize::Small, FontColor::White);
+
+	// カウントダウン
+	if (MainProcessing == CountDown) {
+		switch (countDownSwitch)
+		{
+		case 1:
+			Engine::DrawFont(300.0f, 100.0f, "３", FontSize::Large, FontColor::Red);
+			break;
+		case 2:
+			Engine::DrawFont(300.0f, 100.0f, "２", FontSize::Large, FontColor::Red);
+			break;
+		case 3:
+			Engine::DrawFont(300.0f, 100.0f, "１", FontSize::Large, FontColor::Red);
+			break;
+		case 4:
+			Engine::DrawFont(300.0f, 100.0f, "GO!", FontSize::Large, FontColor::Red);
+			break;
+		case 5:
+			MainProcessing = Playing;
+		default:
+			break;
+		}
+	}
+
+	// カウンターの表示
+	if (MainProcessing == Playing) {
+		Engine::DrawFont(100.0f, 0.0f, printCounter, FontSize::Small, FontColor::Black);
+	}
 
 	// 描画終了
 	// 描画処理を終了する場合、必ず最後に実行する
